@@ -52,4 +52,8 @@ public class SingleDBConnection {
         }
         return instance;
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
 }

@@ -12664,10 +12664,38 @@ Composition genellikle şu durumlarda kullanılır:
 
 ---
 
-### **7. Sonuç**
-Composition, **OOP'de daha esnek ve modüler bir yapı sağlar**. Bir sınıfın başka bir sınıfın özelliklerini **kalıtım yerine bileşim yoluyla** kullanmasını sağlar. Özellikle **bağımlılıkları azaltmak, kod tekrarını önlemek ve daha sürdürülebilir yazılım geliştirmek** için önemlidir.
+### **7. Composition ile Capsulation Farkı**
 
-Eğer bir nesne diğer bir nesneyi **sahipleniyorsa (has-a relationship)** ve o nesnenin fonksiyonlarını kullanıyorsa, Composition kullanmalısınız. Eğer bir nesne başka bir nesnenin özelliklerini tamamen devralıyorsa ve **o nesne onun bir türevidir (is-a relationship)**, o zaman kalıtım kullanabilirsiniz.
+```java
+package com.core.dao;
+
+import java.sql.Connection;
+
+import database.SingleDBConnection;
+
+public class UserDAO {
+
+    // 1. ENCAPSULATION: private ile erişim kısıtlanıyor. Doğrudan değiştiremeiyz değerlerini.  Bu yüzden zaten en başta kapsülleme her türlü var.
+    // 2. COMPOSITION: "UserDAO'nun bir Connection'ı var" (has-a ilişkisi)
+    // Şimdi kritik nokta şu:
+    // Eğer connection'ı constructor içinde new ile oluşturuyorsanız veya kendisi sabit bir yerden oluşturuyorsanız -> Bu composition 'PATTERN'
+    // Eğer connection'ı dışarıdan alıyorsanız, dinamik bir connection oluşturuyorsanız -> Bu injection 'PATTERN'
+    private Connection connection; // COMPOSITION her halükarda var sadece pattern'ler farklı olabilir.
+
+    public UserDAO() {
+        this.connection = SingleDBConnection.getInstance().getConnection(); // COMPOSITION PATTERN
+    }
+    // Yani şu an yukarıda composition pattern kullanıyoruz. Çünkü connection'ı constructor içinde sabit bir yerden alıyoruz.
+    
+    // Aşağıda ise injection pattern kullanıyoruz. Çünkü connection'ı dışarıdan alıyoruz. AMA HALA COMPOSITION VAR ÇÜNKÜ USERDAO HAS A 'CONNECTION'.
+    public UserDAO(Connection connection) {
+        // Başkası veriyor
+        this.connection = connection;
+    }   
+}
+
+```
+
 
 
 ## Thread Oluşturma ve Yönetimi
