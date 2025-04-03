@@ -26,14 +26,14 @@ public class UserDAO {
     
     // Aşağıda ise injection pattern kullanıyoruz. Çünkü connection'ı dışarıdan alıyoruz. AMA HALA COMPOSITION VAR ÇÜNKÜ USERDAO HAS A 'CONNECTION'.
     public UserDAO(Connection connection) {
-        // Başkası veriyor
+        // Başkası veriyor bu yüzden injection pattern kullanıyoruz.
         this.connection = connection;
     }
 
     public UserDTO create(UserDTO userDto) {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, userDto.getName());
+            statement.setString(1, userDto.getUsername());
             statement.setString(2, userDto.getEmail());
             statement.setString(3, userDto.getPassword());
             statement.executeUpdate();
@@ -58,7 +58,7 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
             List<UserDTO> userDtos = new ArrayList<>();
             while (resultSet.next()) {
-                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getString("email"), resultSet.getString("password")));
+                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status")));
             }
             return userDtos;
         } catch (SQLException e) {
