@@ -30,6 +30,9 @@ public class UserDAO {
         this.connection = connection;
     }
 
+
+    // Optional yapısı kullanılacak sebebini öğrenerek...
+    // tablo olmadığı için cathc'e düşerse tablo tekrar oluşturulacak 
     public UserDTO create(UserDTO userDto) {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -45,7 +48,9 @@ public class UserDAO {
                 return userDto;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (e.getMessage().toLowerCase().contains("table") && e.getMessage().toLowerCase().contains("not found")) {
+                createTable('users');
+            }
         }
         
         return null;
@@ -62,12 +67,88 @@ public class UserDAO {
             }
             return userDtos;
         } catch (SQLException e) {
-            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+    // Optional yapısı kullanılacak sebebini öğrenerek...
+    // tablo olmadığı için cathc'e düşerse tablo tekrar oluşturulacak 
+    public UserDTO findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            
+            if(resultSet.next()) {
+                return new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status"));
+            }
+        } catch (SQLException e) {
+            if (e.getMessage().toLowerCase().contains("table") && e.getMessage().toLowerCase().contains("not found")) {
+                createTable('users');
+            }
+        }
+        
+        return null;
+    }
+
+    public UserDTO findById(long id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            
+            if(resultSet.next()){
+                return new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status"));
+            }
+        } catch (SQLException e){
+
+        }
+        return null;
+    }
+
+    // Optional yapısı kullanılacak sebebini öğrenerek...
+    // tablo olmadığı için cathc'e düşerse tablo tekrar oluşturulacak 
+    public UserDTO update(UserDTO userDto) {
+        UserDTO checkUser = findById(userDto.getId());
+        if(checkUser != null){
+            String sql = "UPDATE users SET username = ?, email = ?, password = ?, role = ?, status = ? WHERE id = ?";
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setString(1, userDto.getUsername());
+                statement.setString(2, userDto.getEmail());
+                statement.setString(3, userDto.getPassword());
+                statement.setString(4, userDto.getRole());
+                statement.setString(5, userDto.getStatus());
+                statement.setLong(6, userDto.getId());
+                statement.executeUpdate();
+
+                return statement.getUpdateCount() > 0 ? userDto : null;
+            } catch (SQLException e){
+
+            }
         }
         return null;
     }
 
 
+    // Optional yapısı kullanılacak sebebini öğrenerek...
+    public UserDTO delete(long id) {
+        UserDTO userDto = findById(id);
+        if(userDto != null){
+            String sql = "UPDATE users SET visible = ? WHERE id = ?";
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setBoolean(1, false);
+                statement.setLong(2, id);
+                statement.executeUpdate();
+
+                return statement.getUpdateCount() > 0 ? userDto : null;
+            } catch (SQLException e){
+
+            }
+            return null;
+        }
+        return null;
+    }
 
     
 }
