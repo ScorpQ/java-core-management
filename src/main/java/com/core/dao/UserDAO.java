@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.core.dto.UserDTO;
-import database.SingleDBConnection;
+import com.core.database.SingleDBConnection;
+import com.core.interfaces.IDaoImplements;
+import com.core.interfaces.ILogin;
 
-public class UserDAO {
+public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
 
     // 1. ENCAPSULATION: private ile erişim kısıtlanıyor. Doğrudan değiştiremeiyz değerlerini.  Bu yüzden zaten en başta kapsülleme her türlü var.
     // 2. COMPOSITION: "UserDAO'nun bir Connection'ı var" (has-a ilişkisi)
@@ -48,9 +50,7 @@ public class UserDAO {
                 return userDto;
             }
         } catch (SQLException e) {
-            if (e.getMessage().toLowerCase().contains("table") && e.getMessage().toLowerCase().contains("not found")) {
-                createTable('users');
-            }
+            
         }
         
         return null;
@@ -63,7 +63,7 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
             List<UserDTO> userDtos = new ArrayList<>();
             while (resultSet.next()) {
-                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status")));
+                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status"), resultSet.getBoolean("visible")));
             }
             return userDtos;
         } catch (SQLException e) {
@@ -75,25 +75,13 @@ public class UserDAO {
     // Optional yapısı kullanılacak sebebini öğrenerek...
     // tablo olmadığı için cathc'e düşerse tablo tekrar oluşturulacak 
     public UserDTO findByEmail(String email) {
-        try{
-            String sql = "SELECT * FROM users WHERE email = ?";
-            return selectSingle(sql, email);
-        } catch (SQLException e){
-            if (e.getMessage().toLowerCase().contains("table") && e.getMessage().toLowerCase().contains("not found")) {
-                createTable('users');
-            }
-        }
-        return null;
+        String sql = "SELECT * FROM users WHERE email = ?";
+        return selectSingle(sql, email);
     }
 
     public UserDTO findById(long id) {
-        try{
-            String sql = "SELECT * FROM users WHERE id = ?";
-            return selectSingle(sql, id);
-        } catch (SQLException e){
-
-        }
-        return null;
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return selectSingle(sql, id);
     }
 
     // Optional yapısı kullanılacak sebebini öğrenerek...
@@ -121,34 +109,26 @@ public class UserDAO {
 
     // Optional yapısı kullanılacak sebebini öğrenerek...
     public UserDTO delete(long id) {
-        try {
             UserDTO userDto = findById(id);
             if(userDto != null){
                 String sql = "UPDATE users SET visible = ? WHERE id = ?";
-                return selectSingle(sql, false, id);
-            }
-        } catch (SQLException e) {
-
+            return selectSingle(sql, false, id);
         }
         return null;
     }
     
 
     ///////////////////////////Login Methods/////////////////////////////////
-    public UserDTO login(String email, String password) {
-        try{
-            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-            return selectSingle(sql, email, password);
-        } catch (SQLException e){
-
-        }
-        return null;
+    public UserDTO loginUser(String email, String password) {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        return selectSingle(sql, email, password);
     }
 
-    
+
     ///////////////////////////Common Methods/////////////////////////////////
 
-    UserDTO mapToUserDTO(ResultSet resultSet) throws SQLException {
+    @Override
+    public UserDTO mapToUserDTO(ResultSet resultSet) throws SQLException {
         return new UserDTO(
             resultSet.getLong("id"), 
             resultSet.getString("email"), 
@@ -160,7 +140,8 @@ public class UserDAO {
         );
     }
 
-    UserDTO selectSingle(String sql, Object... params) throws SQLException {
+    @Override
+    public UserDTO selectSingle(String sql, Object... params) {
         try(PreparedStatement statement = connection.prepareStatement(sql)){
             for(int i = 1; i < params.length; i++){
                 statement.setObject(i, params[i]);
@@ -170,9 +151,7 @@ public class UserDAO {
                 return mapToUserDTO(resultSet);
             }
         } catch (SQLException e){
-            if (e.getMessage().toLowerCase().contains("table") && e.getMessage().toLowerCase().contains("not found")) {
-                createTable('users');
-            }
+
         }
         return null;
     }
