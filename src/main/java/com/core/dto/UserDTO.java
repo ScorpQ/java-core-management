@@ -14,6 +14,7 @@ public class UserDTO {
     private String password;
     private String role;
     private String status;
+    private boolean visible;
     
     public UserDTO(long id, String email, String username, String password, String role, String status) {
         this.id = id;
@@ -22,6 +23,7 @@ public class UserDTO {
         this.password = password;
         this.role = role;
         this.status = status;
+        this.visible = true;
     }   
     
     public UserDTO() {
@@ -31,6 +33,7 @@ public class UserDTO {
         this.password = "";
         this.role = "";
         this.status = "";
+        this.visible = true;
     }
 
     public long getId() {
