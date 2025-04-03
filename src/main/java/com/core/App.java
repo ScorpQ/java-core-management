@@ -1,20 +1,18 @@
 package com.core;
 
-import com.sun.net.httpserver.HttpServer;
-
-import database.SingleDBConnection;
-
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.util.List;
 
-/**
- * Hello world!
- *
- */
+import com.core.dao.UserDAO;
+import com.core.dto.UserDTO;
+
 public class App 
 {
     public static void main( String[] args ) throws IOException
     {
-        SingleDBConnection.getInstance();
+        UserDAO userDao = new UserDAO();
+        userDao.create(new UserDTO(1, "test@test.com", "test", "test", "test", "test"));
+        List<UserDTO> users = userDao.list();
+        System.out.println(users);
     }
 }
