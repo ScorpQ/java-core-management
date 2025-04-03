@@ -1,4 +1,4 @@
-package database;
+package com.core.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.h2.tools.Server;
 
-import utils.Color;
+import com.core.utils.Color;
 
 public class SingleDBConnection {
 
