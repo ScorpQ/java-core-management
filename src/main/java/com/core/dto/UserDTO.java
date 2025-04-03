@@ -16,14 +16,14 @@ public class UserDTO {
     private String status;
     private boolean visible;
     
-    public UserDTO(long id, String email, String username, String password, String role, String status) {
+    public UserDTO(long id, String email, String username, String password, String role, String status, boolean visible) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;
         this.status = status;
-        this.visible = true;
+        this.visible = visible;
     }   
     
     public UserDTO() {
@@ -82,5 +82,13 @@ public class UserDTO {
 
     public void setStatus(String status) {
         this.status = status;   
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }
