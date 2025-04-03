@@ -11,7 +11,7 @@ public class App
     public static void main( String[] args ) throws IOException
     {
         UserDAO userDao = new UserDAO();
-        userDao.create(new UserDTO(1, "test@test.com", "test", "test", "test", "test"));
+        userDao.create(new UserDTO(1, "test@test.com", "test", "test", "test", "test", true));
         List<UserDTO> users = userDao.list();
         System.out.println(users);
     }

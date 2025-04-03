@@ -30,6 +30,7 @@ public class UserDAO {
         this.connection = connection;
     }
 
+    ///////////////////////////CRUD Methods/////////////////////////////////
     // Optional yapısı kullanılacak sebebini öğrenerek...
     // tablo olmadığı için cathc'e düşerse tablo tekrar oluşturulacak 
     public UserDTO create(UserDTO userDto) {
@@ -133,7 +134,18 @@ public class UserDAO {
     }
     
 
+    ///////////////////////////Login Methods/////////////////////////////////
+    public UserDTO login(String email, String password) {
+        try{
+            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+            return selectSingle(sql, email, password);
+        } catch (SQLException e){
 
+        }
+        return null;
+    }
+
+    
     ///////////////////////////Common Methods/////////////////////////////////
 
     UserDTO mapToUserDTO(ResultSet resultSet) throws SQLException {
