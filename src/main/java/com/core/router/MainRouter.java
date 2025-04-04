@@ -24,6 +24,7 @@ public class MainRouter {
         server.createContext("/register", this::handleRegister);
     }
 
+    /////////////////////////////// LOGIN ROUTER ///////////////////////////////
     private void handleLogin(HttpExchange exchange) throws IOException {
         if ("POST".equals(exchange.getRequestMethod())) {
             try {
@@ -40,7 +41,7 @@ public class MainRouter {
                 String response = user != null ? "Giriş başarılı" : "Giriş başarısız";
 
                 exchange.sendResponseHeaders(200, response.getBytes().length);
-                
+
                 try (OutputStream os = exchange.getResponseBody()) {    
                     os.write(response.getBytes());
                 }
@@ -50,6 +51,9 @@ public class MainRouter {
         }
     } 
 
+
+
+    /////////////////////////////// REGISTER ROUTER ///////////////////////////////
     private void handleRegister(HttpExchange exchange) throws IOException {
         try {
             String response = userDAO.list().toString();
@@ -62,6 +66,12 @@ public class MainRouter {
         }   
     }
 
+
+    /////////////////////////////// ADMIN ROUTER ///////////////////////////////
+
+
+
+    /////////////////////////////// Common METHODS ///////////////////////////////    
     // JSON string'den değer çıkarma (basit bir örnek)
     private String extractValue(String json, String key) {
         String searchKey = "\"" + key + "\":";
