@@ -141,8 +141,8 @@ public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
     @Override
     public UserDTO selectSingle(String sql, Object... params) {
         try(PreparedStatement statement = connection.prepareStatement(sql)){
-            for(int i = 1; i < params.length; i++){
-                statement.setObject(i, params[i]);
+            for(int i = 0; i < params.length; i++){
+                statement.setObject(i+1, params[i]);
             }
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
