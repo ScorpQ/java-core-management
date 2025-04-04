@@ -63,11 +63,11 @@ public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
             ResultSet resultSet = statement.executeQuery();
             List<UserDTO> userDtos = new ArrayList<>();
             while (resultSet.next()) {
-                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getString("status"), resultSet.getBoolean("visible")));
+                userDtos.add(new UserDTO(resultSet.getLong("id"), resultSet.getString("email"), resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("role"), resultSet.getBoolean("visible")));
             }
             return userDtos;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
@@ -95,7 +95,6 @@ public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
                 statement.setString(2, userDto.getEmail());
                 statement.setString(3, userDto.getPassword());
                 statement.setString(4, userDto.getRole());
-                statement.setString(5, userDto.getStatus());
                 statement.setLong(6, userDto.getId());
                 statement.executeUpdate();
 
@@ -135,7 +134,6 @@ public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
             resultSet.getString("username"), 
             resultSet.getString("password"), 
             resultSet.getString("role"), 
-            resultSet.getString("status"),
             resultSet.getBoolean("visible")
         );
     }
@@ -151,7 +149,7 @@ public class UserDAO implements IDaoImplements<UserDTO>,  ILogin<UserDTO> {
                 return mapToUserDTO(resultSet);
             }
         } catch (SQLException e){
-
+            e.printStackTrace(); // Hatayı görmek için
         }
         return null;
     }

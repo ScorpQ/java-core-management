@@ -13,16 +13,14 @@ public class UserDTO {
     private String username;
     private String password;
     private String role;
-    private String status;
     private boolean visible;
     
-    public UserDTO(long id, String email, String username, String password, String role, String status, boolean visible) {
+    public UserDTO(long id, String email, String username, String password, String role, boolean visible) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.status = status;
         this.visible = visible;
     }   
     
@@ -32,7 +30,6 @@ public class UserDTO {
         this.username = "";
         this.password = "";
         this.role = "";
-        this.status = "";
         this.visible = true;
     }
 
@@ -74,14 +71,6 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
-    }   
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;   
     }
 
     public boolean isVisible() {
@@ -90,5 +79,16 @@ public class UserDTO {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", visible=" + visible +
+                '}';
     }
 }
