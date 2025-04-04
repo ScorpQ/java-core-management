@@ -1,5 +1,6 @@
 package com.core.interfaces;
 
-public class ILogin {
-    
+public interface ILogin <T> {
+    // Login
+    T loginUser(String username, String password);
 }

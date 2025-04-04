@@ -39,7 +39,7 @@ public class SingleDBConnection {
     private void H2DbStarting() {
         try {
             Server server = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
-            System.out.println("H2 Web Console is running at: http://localhost:8082");
+            System.out.println("H2 Web Console is running at: http://localhost:8080");
         } catch (SQLException e) {
             e.printStackTrace();
         }
